@@ -4,22 +4,23 @@ namespace DevJobs.API.Controllers
     using DevJobs.API.Entities;
     using DevJobs.API.Models;
     using DevJobs.API.Persistence;
+    using DevJobs.API.Persistence.Repositories;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/job-vacancies")]
     [ApiController]
     public class JobVacanciesController : ControllerBase
     {
-        private readonly DevJobsContext _context;
-        public JobVacanciesController(DevJobsContext context)
+        private readonly IJobVacancyRepository _repository;
+        public JobVacanciesController(IJobVacancyRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
         
         [HttpGet]
         public IActionResult GetAll()
         {
-            var jobVacancies = _context.JobVacancies;
+            var jobVacancies = _repository.GetAll();
             return Ok(jobVacancies);
         }
 
@@ -28,7 +29,7 @@ namespace DevJobs.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var jobVacancy = _context.JobVacancies.SingleOrDefault(jv => jv.Id == id);
+            var jobVacancy = _repository.GetById(id);
             
             if(jobVacancy == null)
                 return NotFound();
@@ -47,7 +48,7 @@ namespace DevJobs.API.Controllers
                 model.SalaryRange
             );
 
-            _context.JobVacancies.Add(jobVacancy);
+            _repository.Add(jobVacancy);
 
             return CreatedAtAction("GetById", new {id = jobVacancy.Id}, jobVacancy);
         }
@@ -55,12 +56,13 @@ namespace DevJobs.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, UpdateJobVacancyInputModel model)
         {
-            var jobVacancy = _context.JobVacancies.SingleOrDefault(jv => jv.Id == id);
+            var jobVacancy = _repository.GetById(id);
             
             if(jobVacancy == null)
                 return NotFound();
 
             jobVacancy.Update(model.Title, model.Description);
+            _repository.Update(jobVacancy);
             
             return NoContent();
         }

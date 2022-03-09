@@ -1,4 +1,5 @@
 using DevJobs.API.Persistence;
+using DevJobs.API.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,8 @@ builder.Services.AddDbContext<DevJobsContext>(options =>
     // Transição de memoria para SQL Server
     options.UseSqlServer(connectionString)
 );
+
+builder.Services.AddScoped<IJobVacancyRepository, JobVacancyRepository>();
 
 // Add services to the container.
 builder.Services.AddControllers();
