@@ -16,9 +16,9 @@ var connectionString = builder.Configuration.GetConnectionString("DevJobsCs");
 // Com isso o DevJobsContext mantera o estado em todo tempo de vida da aplicação    
 // builder.Services.AddSingleton<DevJobsContext>();
 builder.Services.AddDbContext<DevJobsContext>(options => 
-    // options.UseInMemoryDatabase("DevJobs")
+    options.UseInMemoryDatabase("DevJobs")
     // Transição de memoria para SQL Server
-    options.UseSqlServer(connectionString)
+    // options.UseSqlServer(connectionString)
 );
 
 builder.Services.AddScoped<IJobVacancyRepository, JobVacancyRepository>();
@@ -44,16 +44,16 @@ builder.Services.AddSwaggerGen(c => {
     c.IncludeXmlComments(xmlPath);
 });
 
-builder.Host.ConfigureAppConfiguration((hostingContext, config) => {
-    Serilog.Log.Logger = new LoggerConfiguration()
-        .Enrich.FromLogContext()
-        .WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions(){
-            AutoCreateSqlTable = true,
-            TableName = "Logs",
-        })
-        // .WriteTo.Console()
-        .CreateLogger();
-}).UseSerilog();
+// builder.Host.ConfigureAppConfiguration((hostingContext, config) => {
+//     Serilog.Log.Logger = new LoggerConfiguration()
+//         .Enrich.FromLogContext()
+//         .WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions(){
+//             AutoCreateSqlTable = true,
+//             TableName = "Logs",
+//         })
+//         // .WriteTo.Console()
+//         .CreateLogger();
+// }).UseSerilog();
 
 var app = builder.Build();
 
