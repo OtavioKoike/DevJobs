@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevJobs.API.Persistence.Migrations
 {
     [DbContext(typeof(DevJobsContext))]
-    [Migration("20220309222132_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20220313202926_FinishApplicantMigrarion")]
+    partial class FinishApplicantMigrarion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,6 +24,61 @@ namespace DevJobs.API.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("DevJobs.API.Entities.Applicant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Document")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UrlCurriculum")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Applicants");
+                });
+
+            modelBuilder.Entity("DevJobs.API.Entities.ApplicantSkill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdApplicant")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Time")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdApplicant");
+
+                    b.ToTable("ApplicantSkills");
+                });
+
             modelBuilder.Entity("DevJobs.API.Entities.JobApplication", b =>
                 {
                     b.Property<int>("Id")
@@ -32,13 +87,8 @@ namespace DevJobs.API.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("ApplicantEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ApplicantName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("IdApplicant")
+                        .HasColumnType("int");
 
                     b.Property<int>("IdJobVacancy")
                         .HasColumnType("int");
@@ -85,6 +135,15 @@ namespace DevJobs.API.Persistence.Migrations
                     b.ToTable("JobVacancies");
                 });
 
+            modelBuilder.Entity("DevJobs.API.Entities.ApplicantSkill", b =>
+                {
+                    b.HasOne("DevJobs.API.Entities.Applicant", null)
+                        .WithMany("Skills")
+                        .HasForeignKey("IdApplicant")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DevJobs.API.Entities.JobApplication", b =>
                 {
                     b.HasOne("DevJobs.API.Entities.JobVacancy", null)
@@ -92,6 +151,11 @@ namespace DevJobs.API.Persistence.Migrations
                         .HasForeignKey("IdJobVacancy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DevJobs.API.Entities.Applicant", b =>
+                {
+                    b.Navigation("Skills");
                 });
 
             modelBuilder.Entity("DevJobs.API.Entities.JobVacancy", b =>

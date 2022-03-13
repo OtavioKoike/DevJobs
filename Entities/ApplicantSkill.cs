@@ -1,18 +1,20 @@
 namespace DevJobs.API.Entities
 {
-    public class JobApplication
+    public class ApplicantSkill
     {
         // Atalho: ctrl + . e gerar contrutor com atributos selecionados
-        public JobApplication(int idApplicant, int idJobVacancy)
+        public ApplicantSkill(string description, string time, int idApplicant)
         {
+            Description = description;
+            Time = time;
             IdApplicant = idApplicant;
-            IdJobVacancy = idJobVacancy;
         }
 
         // Atalho: propg
         public int Id { get; private set; }
+        public string Description { get; private set; }
+        public string Time { get; private set; }
         public int IdApplicant { get; private set; }
-        public int IdJobVacancy { get; private set; }
         
     }
 }

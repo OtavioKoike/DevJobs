@@ -1,6 +1,9 @@
 namespace DevJobs.API.Models
 {
-    public record AddJobApplicationInputModel(string ApplicantName, string ApplicantEmail, int IdJobVacancy)
+    public record AddJobApplicationInputModel(
+        string DocumentApplicant, 
+        int IdJobVacancy
+    )
     {
         
     }

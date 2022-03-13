@@ -12,6 +12,7 @@ namespace DevJobs.API.Entities
 
             CreatAt = DateTime.Now;
             Applications = new List<JobApplication>();
+            // Applicants = new List<Applicant>();
         }
 
         public int Id { get; private set; }
@@ -22,6 +23,7 @@ namespace DevJobs.API.Entities
         public string SalaryRange { get; private set; }
         public DateTime CreatAt { get; private set; }
         public List<JobApplication> Applications { get; private set; }
+        // public List<Applicant> Applicants { get; private set; }
         
         // Todos atributos possuem set private, logo só poderão ser alterados pela função update
         public void Update(string title, string description) {
